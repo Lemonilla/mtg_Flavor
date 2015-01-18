@@ -39,10 +39,11 @@ while True:
                                         flavor_text = l.encode('utf8')
 
                                 for n in name.findall(req.text):
-                                        card_name = n.replace("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay\">","").replace("</span>","").replace("  ","").replace("\n","")
-                                        card_name = card_name.encode('utf8')
-                                        card_name = "["+str(card_name[:-1])+"]"
-                                        card_name = card_name + "\n"
+                                        if n <> None:
+                                                card_name = n.replace("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay\">","").replace("</span>","").replace("  ","").replace("\n","")
+                                                card_name = card_name.encode('utf8')
+                                                card_name = "["+str(card_name[:-1])+"]"
+                                                card_name = card_name + "\n"
 
                                 if debug == True:
                                         print card_name
@@ -64,7 +65,8 @@ while True:
                                         access_token_key=access_token_key,
                                         access_token_secret=access_token_secret,
                                         input_encoding='utf-8').PostUpdate(message)
-                time.sleep(random.randrange(1*60,1*60*60)
+                time.sleep(random.randrange(1*60,1*60*60))
+
         except:
                 print "Error, Retrying in 30 Seconds. . ."
                 time.sleep(30)
