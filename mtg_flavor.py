@@ -12,6 +12,12 @@ flavor = regex.compile(r'<div class="cardtextbox" style="padding-left:10px;"><i>
 name = regex.compile(r'<span id="ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay">.*')
 hashtag = "\n#mtg_flavor"
 debug=False
+consumer_key=sys.argv[1]
+consumer_secret=sys.argv[2]
+access_token_key=sys.argv[3]
+access_token_secret=sys.argv[4]
+
+
 
 while True:
         try:
@@ -53,10 +59,10 @@ while True:
                 if debug == True:
                         print message
 
-                status = twitter.Api(consumer_key=sys.argv[1],
-                                        consumer_secret=sys.argv[2],
-                                        access_token_key=sys.argv[3],
-                                        access_token_secret=sys.argv[4],
+                status = twitter.Api(consumer_key=consumer_key,
+                                        consumer_secret=consumer_secret,
+                                        access_token_key=access_token_key,
+                                        access_token_secret=access_token_secret,
                                         input_encoding='utf-8').PostUpdate(message)
                 time.sleep(random.randrange(1*60,1*60*60)
         except:
