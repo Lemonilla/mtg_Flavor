@@ -67,8 +67,10 @@ while True:
 
                 # Print debug information
                 if debug == True:
-                        print message
-
+                        try:
+                                print message
+                        except: UnicodeEncodeError:
+                                print "Unicode Error"
                 # Post status
                 status = twitter.Api(consumer_key=consumer_key, 
                                         consumer_secret=consumer_secret, 
@@ -78,9 +80,15 @@ while True:
 
                 # Wait for random time between 1 min and 1 hr
                 sleep = random.randrange(1,30*60)
-                if debug == True:
-                        print sleep
-                time.sleep(sleep)
+                while sleep > 0:
+                        time.sleep(1)
+                        sleep = sleep - 1
+                        if debug == True:
+                                sys.stdout.flush()
+                                print "\r",
+                                print "        ",
+                                print "\r",
+                                print sleep,
 
         # Catch connection errors
         except requests.exceptions.ConnectionError:
