@@ -20,32 +20,39 @@ access_token_secret=sys.argv[4]
 
 # Loop forever
 while True:
+        # Define defaults
+        message="........................................................................................................................................................................................................................................................................."
+        card_name=None
+        card_flavor=None
+        card_name_s=None
+        card_flavor_s=None
+
         # Catch connection errors
         try:
-                # Define defaults
-                message="........................................................................................................................................................................................................................................................................."
-                card_name=None
-                flavor_text=None
+
 
                 # loop until a match is found
                 while len(message) > 140 or message == None:
-                        while flavor_text == None or card_name == None:
+                        while card_flavor == None or card_name == None:
 
                                 # Generate random number
                                 ran = random.randrange(1,60000)
                                 if debug == True:
                                         print ran
+                                try:
+                                        # Check random number for flavor text
+                                        req = requests.get("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=%d" % ran)
+                                        card_name = name.findall(req.text)
+                                        card_flavor = flavor.findall(req.text)
+                                        card_name_s = card_name[0].replace("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay\">","").replace("</span>","").replace("  ","").replace("\n","").replace("\n","")
+                                        card_flavor_s = card_flavor[0].replace("<div class=\"cardtextbox\" style=\"padding-left:10px;\"><i>","").replace("<div class=\"cardtextbox\" style=\"padding-left:10px;\"><i>","").replace("</i></div><div class='cardtextbox'></i>","\n").replace("</i></div></div>","")
 
-                                # Check random number for flavor text
-                                req = requests.get("http://gatherer.wizards.com/Pages/Card/Details.aspx?multiverseid=%d" % ran)
-                                card_name = name.findall(req.text)
-                                card_flavor = flavor.findall(req.text)
-                                card_name_s = card_name[0].replace("<span id=\"ctl00_ctl00_ctl00_MainContent_SubContent_SubContentHeader_subtitleDisplay\">","").replace("</span>","").replace("  ","").replace("\n","")
-                                card_flavor_s = card_flavor[0].replace("<div class=\"cardtextbox\" style=\"padding-left:10px;\"><i>","").replace("<div class=\"cardtextbox\" style=\"padding-left:10px;\"><i>","").replace("</i></div><div class='cardtextbox'></i>","\n").replace("</i></div></div>","")
+                                except IndexError:
+                                        message="........................................................................................................................................................................................................................................................................."
+                                        card_name=None
+                                        flavor_text=None
 
-                        message = card_name_s + card_flavor_s
-                        print message
-
+                        message = "[" + card_name_s[:-1] + "]\n" + card_flavor_s
 
                         # Add hashtage if possable
                         if len(message)+13 < 140:
@@ -57,10 +64,10 @@ while True:
                                 card_name=None
                                 flavor_text=None
 
+
                 # Print debug information
                 if debug == True:
                         print message
-
 
                 # Post status
                 status = twitter.Api(consumer_key=consumer_key, 
@@ -78,3 +85,4 @@ while True:
         # Catch connection errors
         except requests.exceptions.ConnectionError:
                 print "Error, retrying. . ."
+        
