@@ -69,7 +69,7 @@ while True:
                 if debug == True:
                         try:
                                 print message
-                        except: UnicodeEncodeError:
+                        except UnicodeEncodeError:
                                 print "Unicode Error"
                 # Post status
                 status = twitter.Api(consumer_key=consumer_key, 
